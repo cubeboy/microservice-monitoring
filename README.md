@@ -24,8 +24,15 @@ EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에
 ## Chapter 02 : EKS Cluster 생성
 > - 학습 문서 : [./doc/chapter02.md](./doc/chapter02.md)
 > - git commit history : 02-01 ~ 02-02
->### 학습 문서의 내용을 진행하기 전에 아래의 사전 준비작업 진행 필요
+>### 사전 준비작업
 > >1. kubectl 설치 : [kubectl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html)
 > >1. eksctl 설치 : [eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/eksctl.html)
 > >
+<br/>
+
+## Chapter 03 : EKS Cluster 에 Monitoring Service 배포하기
+> - 학습 문서 : [./doc/chapter03.md](./doc/chapter03.md)
+> - git commit history : 03-01 ~ 03-03
+>### 사전 준비작업
+> >1. helm 설치 : [helm 설치](https://helm.sh/docs/intro/install/)
 <br/>
