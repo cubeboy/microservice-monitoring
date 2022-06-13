@@ -19,3 +19,13 @@ EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에
 > >1. aws cli 설치 : [aws cli 시작하기](https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-getting-started.html)
 > >1. aws cli iam 계정 구성 설정 : [구성 및 자격 증명 파일 설정](https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-configure-files.html)
 > >1. node.js 설치 : [node.js](https://nodejs.org/en/)
+<br/>
+
+## Chapter 02 : EKS Cluster 생성
+> - 학습 문서 : [./doc/chapter02.md](./doc/chapter02.md)
+> - git commit history : 02-01 ~ 02-02
+>### 학습 문서의 내용을 진행하기 전에 아래의 사전 준비작업 진행 필요
+> >1. kubectl 설치 : [kubectl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/install-kubectl.html)
+> >1. eksctl 설치 : [eksctl 설치](https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/eksctl.html)
+> >
+<br/>
