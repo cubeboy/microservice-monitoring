@@ -1,14 +1,21 @@
-# Welcome to your CDK TypeScript project
+# Microservice Monitoring by Prometheus & Grafana
 
-This is a blank project for CDK development with TypeScript.
+본 학습 문서는 AWS CDK 를 이용해 테스트를 위한 간단한 EKS Cluster 를 구성하고 모니터링을 위한 데모 java application 을 설치한 후 helm chart 를 이용해 Prometheus & Grafana 모니터링 환경을 구성 하는 것을 목표로 한다.<br/>
+EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에 나오는 특정 기술들(*typescript, cdk, helm 등*)은 학습을 위한 최소한의 설명만을 다루며 때문에 해당 기술에 대한 보다 자세한 정보는 다른 학습 자료를 참조 하도록 한다.  <br/>
+각 챕터별로 사전 준비작업이 있으며 학습 진행 전에 사전중비 작업을 먼저 진행 하도록 한다.<br/>
+학습내용의 환경은 Linux OS 기반의 환경에서 진행 되었다.<br/>
+학습내용의 개발도구는 VSCODE 기반으로 진행 하였으나 다른 개발 도구(UltraEdit, WebStorm 등)를 사용하여도 무방하다.<br/>
+학습내용은 단계별로 git history 가 기록되어 있다.<br/>
+단계별로 해당 commit 을 checkout 하여 해당 시점의 소스코드를 참조하며 학습을 진행 할 것을 권장한다.<br/>
+본 학습을 진행하기 위해서는 반드시 AWS Account 가 필요하다.<br/>
+본 학습을 진행 할 경우 프리티어 서비스만으로는 진행할 수 없는 부분이 있다.<br/>
+본학습에서 권장하는 방법으로 진행시 $2~$3 (8시간 기준) 정도의 비용이 청구 될 수 있다.<br/>
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+## Chapter 01 : CDK 프로젝트 생성
+> - 학습 문서 : [./doc/chapter01.md](./doc/chapter01.md)
+> - git commit history : 01-01 ~ 01-02
+>### 사전 준비작업
+> >1. widnows10 or 11 환경에서는 WSL2 구성 : [WSL 설치](https://docs.microsoft.com/ko-kr/windows/wsl/install)
+> >1. aws cli 설치 : [aws cli 시작하기](https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-chap-getting-started.html)
+> >1. aws cli iam 계정 구성 설정 : [구성 및 자격 증명 파일 설정](https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/cli-configure-files.html)
+> >1. node.js 설치 : [node.js](https://nodejs.org/en/)
