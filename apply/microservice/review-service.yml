@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-deploy
+  labels:
+    app: review-deploy
+  namespace: product-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: review-service
+    spec:
+      containers:
+      - image: 122443366744.dkr.ecr.ap-northeast-2.amazonaws.com/cdk-hnb659fds-container-assets-122443366744-ap-northeast-2:review-service-0.0.2
+        imagePullPolicy: Always
+        name: review-service
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: "SPRING_PROFILES_ACTIVE"
+          value: "docker"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review
+  labels:
+    app: review-service
+  namespace: product-services
+spec:
+  type: NodePort
+  selector:
+    app: review-service
+  ports:
+    - targetPort: 8080
+      port: 8080

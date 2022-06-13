@@ -8,6 +8,7 @@
 > 당 문서에서는 별도의 CodePipeline 을 구축하지 않고 local PC의 image 를 ECR 에 push 하여 테스트 환경을 구성 한다.<br/>
 > commit history 03-01 의 microservice-solution 폴더 복사 후 추가 한다.<br/>
 > microservice-solution 은 아래와 같은 구조를 가지는 간단한 샘플 app source code 이다. <br/>
+> chapter03에서는 kbuectl 명령어를 이용해 배포 하지만 이후에 CDK 를 이용해 배포하는 방법을 다시 학습한다.
 
 ![microservice](./img/microservice.drawio.png)
 
@@ -84,9 +85,52 @@ aws ecr list-images --repository-name <repository-name>
 ```
 <br/>
 
-> recommendation, review, product-composite application image 에 대해서도 동일한 작업을 진행 한다.<br/>
+> recommendation, review, product-composite application image 에 대해서도 동일한 작업을 진행 한다.
+<br/>
 
- 
+**03-02 microservice deploy**
 
+---
+## microservice deploy
+--- 
+> Chapter02 에서 구축한 EKS Cluster 환경에 DBMS 를 설치하고 Application 을 배포를 진행 한다.<br/>
+> commit history 03-02 를 참조하여 *apply/common/product-service-namespace.yml* 파일을 작성<br/>
+> commit history 03-02 를 참조하여 <br/>*apply/db/product-mongo.yml*<br/>, *apply/db/product-mysql.yml* 파일을 작성 한다.<br/>
+> <br/>
+> commit history 03-02 를 참조하여 <br/>*apply/microservice/product-service.yml*<br/>, *apply/microservice/recommendation-service.yml*, *apply/microservice/review.yml*<br/>, *apply/microservice/product-composite-service.yml*<br/> 파일을 작성 한다.
+<br/>
 
+> microservice application namespace [product-services]를 먼저 생성 한다.
+```bash
+kubectl apply -f apply/common
+```
+> application 실행 전 database 를 먼저 실행한다.<br/>
+> *mysql, mongodb 는 docker-hub 에서 가져오기 때문에 ECR push 과정은 불필요하다.*
+```bash
+kubectl apply -f apply/db
+```
+> microservice application 을 배포한다.
+```bash
+kubectl apply -f apply/microservice
+```
 
+> 아래 명령어를 입력해 pod 실행 상태를 확인한다.
+```bash
+kubectl get pods -n product-services
+NAME                                        READY   STATUS    RESTARTS   AGE
+mongodb-deploy-87c959974-mw2ng              1/1     Running   0          3h9m
+mysql-deploy-794f46d844-zhz4l               1/1     Running   0          3h9m
+product-composite-deploy-85cd45f5dd-dvjxt   1/1     Running   0          165m
+product-deploy-6bcb9dd446-wrmwn             1/1     Running   0          165m
+recommendation-deploy-66d5cbf8b6-8d8nz      1/1     Running   0          165m
+review-deploy-54f97b56c9-qxrsg              1/1     Running   0          165m
+```
+
+> 아래 명령어를 입력해 product-composite 서비스의 임시 domain 주소를 확인한다.
+> *임시 Domain 은 LoadBalancer 를 생성 할때마다 변경 되므로 주의*
+```
+kubectl get svc -n product-services
+product-composite   LoadBalancer   xx.xx.xx.xx   xxxx.ap-northeast-2.elb.amazonaws.co
+```
+> 브라우저에 [임시 Domain + /swagger-ui/index.html] 을 입력해서 application 실행 상태를 확인 한다.
+> > ![swagger-index](./img/swagger-index.png)

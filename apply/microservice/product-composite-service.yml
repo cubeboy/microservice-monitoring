@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-composite-deploy
+  labels:
+    app: product-composite-deploy
+  namespace: product-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-composite-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: product-composite-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+      - image: 122443366744.dkr.ecr.ap-northeast-2.amazonaws.com/cdk-hnb659fds-container-assets-122443366744-ap-northeast-2:product-composite-service-0.0.2
+        imagePullPolicy: Always
+        name: product-composite-service
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: "SPRING_PROFILES_ACTIVE"
+          value: "docker"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-composite
+  labels:
+    app: product-composite
+  namespace: product-services
+spec:
+  type: LoadBalancer
+  selector:
+    app: product-composite-service
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    #nodePort: 30100
