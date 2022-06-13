@@ -36,3 +36,8 @@ EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에
 >### 사전 준비작업
 > >1. helm 설치 : [helm 설치](https://helm.sh/docs/intro/install/)
 <br/>
+
+## Chapter 04 : Loki & Fromtail 로 Log Monitoring 구성
+> - 학습 문서 : [./doc/chapter04.md](./doc/chapter04.md)
+> - git commit history : 04-01 ~ 04-02
+>### 사전 준비 작업 없음
