@@ -100,3 +100,37 @@ cdk init --language typescript
 > 이제 다양한 AWS 자원들을 생성하고 조작할 준비가 완료 되었다.<br/>
 > 보다 자세한 CDK API 관련 내용은 아래 링크를 참조하도록 하자.<br />
 > [AWS CDK Reference Documentation](https://docs.aws.amazon.com/cdk/api/v2)<br/>
+
+---
+## 01-02 계정 리소스 분리
+---
+### 5. 계정 정보 리소스 분리
+> 위와 같이 작업 후에 git server 에 commit 하게 되면 계정 정보가 의도치 않게 공개된다.<br/>
+> 계정정보를 분리해서 형상관리 서버에 등록되지 않도록 하자.<br/>
+> 먼저 *./resources* 폴더를 만들고 생성된 폴더아래에 acount.ts 파일을 만들자.</br>
+> 파일이 생성되면 계정정보를 파일에 등록한다.<br/>
+```typescript
+export const ACCOUNT_ID = 'XXXXXXXXXXXX';
+export const USER_NAME = 'xxxxxxxxxxx.user1'
+export const USER_ARN = 'arn:aws:iam::XXXXXXXXXXXX:user/xxxxxxxxxxx.user1'
+export const REGION = 'ap-northeast-2'
+```
+<br/>
+
+> *./resources/account.ts* 파일이 git server 에 업로드 되지 않도록 아래 처럼 *.gitignore* 파일에 추가하자.<br/>
+```
+resources/account.ts
+```
+<br/>
+
+> 이제 acount.ts 파일을 임포트해서 *./bin/cdk-monitoring.ts* 에 적용하자.<br/>
+```typescript
+import * as account from '../resources/account';
+
+const app = new cdk.App();
+new CdkMonitoringStack(app, 'CdkMonitoringStack', {
+  env: { account: account.ACCOUNT_ID, region: account.REGION },
+});
+```
+> *cdk deploy, cdk destroy* 를 실행해서 정상적으로 처리 되는지 확인하자.<br/>
+
