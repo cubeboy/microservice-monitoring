@@ -134,3 +134,56 @@ product-composite   LoadBalancer   xx.xx.xx.xx   xxxx.ap-northeast-2.elb.amazona
 ```
 > 브라우저에 [임시 Domain + /swagger-ui/index.html] 을 입력해서 application 실행 상태를 확인 한다.
 > > ![swagger-index](./img/swagger-index.png)
+
+**03-03 prometheus & grafana helm install**
+
+---
+## prometheus & grafana helm install
+--- 
+> 이제 helm chart 를 이용해 prometheus & grafana 를 클러스터 환경에 구성 해 보자.<br/>
+> helm chart 를 이용하면 여러 복잡한 단계를 거쳐야 하는 다수의 pod 구성 및 배포 단계를 패키지 형식으로 간단하게 설치/삭제 할 수 있다.<br/>
+> helm install 시작전에 > monitoring namespace 를 먼저 생성한다.
+```bash
+kubectl create namespace monitoring
+```
+> helm repository 추가 후 helm repo update
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+> helm repository 구성이 완료되면 helm chart 에서 사용 할 수 있는 helm cart package 를 확인 할 수 있다.<br/>
+```bash
+helm search repo | grep prometheus
+```
+> 본 학습에서는 kubernetes prometheus package 를 설치 하고 설치 pod 상태를 확인 한다.
+```bash
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring
+kubectl --namespace monitoring get pods
+```
+
+> grafana pod id 를 확인해서 포트 연결
+```bash
+kubectl --namespace monitoring port-forward prometheus-grafana-76d8d4b964-gflg2 3000
+Forwarding from 127.0.0.1:3000 -> 3000
+Forwarding from [::1]:3000 -> 3000
+Handling connection for 3000
+Handling connection for 3000
+```
+
+> 터미널은 그대로 두고 브라우저에 [http://localhost:3000] 을 입력해 연결 확인 한다.<br/>
+> 초기 로그인계정/password는 **admin/prom-operator** 이다<br/>
+> 미리 준비된 대시보드를 이용하거나 새로운 대시보드를 추가해서 이것 저것 테스트 해보자<br/>
+> microserver-solutaion pod 구성 요소들의 cpu, memory, io 사용량을 확인 할 수 있다.
+> 포트 포워드 중단을 월할 경우 터미널에서 ctrl+c 를 입력한다.<br/>
+<br/>
+
+> **주의: 테스트 완료후 반드시 아래의 과정으로 모든 리소스를 삭제<br/>
+> LoadBalancer service 를 삭제하지 않을 경우 cdk destroy 가 정상적으로 완료되지 않는다**<br/>
+```bash
+helm uninstall prometheus -n monitoring
+kubectl delete -f ./helm/monitoring-namespace.yml
+kubectl delete -f ./apply/microservice
+kubectl delete -f ./apply/db
+kubectl delete -f ./apply/common
+cdk destroy
+```
