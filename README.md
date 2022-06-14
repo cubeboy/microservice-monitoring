@@ -41,3 +41,10 @@ EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에
 > - 학습 문서 : [./doc/chapter04.md](./doc/chapter04.md)
 > - git commit history : 04-01 ~ 04-02
 >### 사전 준비 작업 없음
+<br/>
+
+## Chapter 05 : 필터링과 검색이 가능한 대시보드 만들기
+> - 학습 문서 : [./doc/chapter05.md](./doc/chapter05.md)
+> - git commit history : 05-01
+>### 사전 준비 작업 없음
+<br/>
