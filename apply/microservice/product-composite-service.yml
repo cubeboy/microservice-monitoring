@@ -50,4 +50,25 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
-    #nodePort: 30100
+    name: product-composite-svc-port
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: product-composite-monitor
+  labels:
+    app: product-composite-monitor
+    release: prometheus
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: product-composite
+  endpoints:
+    - interval: 15s
+      port: product-composite-svc-port
+      path: "/actuator/prometheus"
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - product-services

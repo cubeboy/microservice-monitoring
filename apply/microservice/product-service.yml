@@ -45,3 +45,25 @@ spec:
   ports:
     - targetPort: 8080
       port: 8080
+      name: product-svc-port
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: product-monitor
+  labels:
+    app: product-monitor
+    release: prometheus
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: product
+  endpoints:
+    - interval: 15s
+      port: product-svc-port  
+      path: "/actuator/prometheus"
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - product-services

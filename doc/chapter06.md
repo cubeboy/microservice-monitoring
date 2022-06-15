@@ -47,3 +47,73 @@ management:
 > 브라우저로 [http://localhost:8081/actuator/prometheus] 에 접속하면 메트릭 정보를 확인 할 수 있다.<br/>
 > 이제 servicemonitor 를 구성하여 메트릭 정보를 수집하고 Grafana dashboard 에 표시 해 보자.<br/>
 
+<br/>
+**06-02 servicemonitor 추가 및 Grafana dashboard 추가**
+
+---
+## servicemonitor 추가
+---
+> helm chart 로 *kube-prometheus-stack* 을 설치 했다면 기본적인 servicemonitor 가 설치된다.
+```bash
+kubectl get servicemonitor -n monitoring
+NAME                                                 AGE
+prometheus-grafana                                   3h
+prometheus-kube-prometheus-alertmanager              3h
+prometheus-kube-prometheus-apiserver                 3h
+prometheus-kube-prometheus-coredns                   3h
+prometheus-kube-prometheus-kube-controller-manager   3h
+...
+```
+> 여기에 product-service app 서비스 모니터를 추가 하자.<br/>
+> commit history 06-02 를 참조 해 *apply/microservice/product-service.yml* 에 서비스 모니터 항목을 추가하자.<br/>
+```yaml
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: product-monitor
+  labels:
+    app: product-monitor
+    release: prometheus
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: product
+  endpoints:
+    - interval: 15s
+      port: product-svc-port  
+      path: "/actuator/prometheus"
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - product-services
+```
+> * **metatdata.labels.release: prometheus** 는 가장 중요한 항목이다. prometheus metrics 수집기는 "release=prometheus" 조건을 이용해 해당 모니터 정보를 수집하기 때문에다.
+> * **sepc.selector.matchLabels.app: product** 수집 대상이되는 서비스의 labels 정보를 기입해서 해당 서비스를 통화하는 메트릭 정보를 수집할 수 있게 해 준다.
+> * **endpoints** 는 수집 대상이 되는 서비스의 port 정보를 입력한다.
+> * **namespaceSelector** 는 app 와 모니터링 시스템의 namespace 가 다른경우 (보통의 경우 다르다) 반드시 등록 해야 한다.
+
+> 이제 파일을 저장하고 서비스를 지우고 다시 적용하자.
+```bash
+kubectl delete -f apply/microservice/product-service.yml
+kubectl apply -f apply/microservice/product-service.yml
+```
+> *kubectl get servicemonitor -n monitoring* 명령어로 서비스모니터가등록 되었는지 확인하자.
+
+> 메트릭 정보가 제대로 수집되고 있는지 확인 해보자.
+```
+kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090 -n monitoring
+```
+> 포트 포워드 실행 후에 브라우저로 [http://localhost:9090] 에 접속하자.<br/>
+> Expression 에 *up == 1* 을 입력하고 *execute* 버튼을 클릭하면 현재 메트릭 수집이 가능한 서비스 목록을 확인 할 수 있다.<br/>
+> 메트릭 수집이 된다면 dashboar 도 구성 할 수 있다.<br/>
+> Grafana 에서 우측의 [+] 버튼을 클릭하고 import 를 클릭한다.<br/>
+
+![import-dashboard](./img/import-dashboard.png)
+
+> *Load* 버튼 좌측의 입력창에 아래 dashboard ID 를 입력하고 *Load* 버튼을 클릭한다.<br/>
+> **12900** <br/>
+> 하단의 prometheus 를 선택하고 *import* 를 클릭한다. <br/>
+> *SpringBoot APM Dashboard* 를 확인 할 수 있다.<br/>
+> 이제 application/pod instance 단위로 cpu, memory, heap/non-heap memory, classes loaded, Threads, GC count, Logback 등의 application 의 내부 상태를 확인 할 수 있다.<br/>
