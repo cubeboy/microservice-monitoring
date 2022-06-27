@@ -54,3 +54,8 @@ EKS 환경의 모니터링 환경 구축에 집중하기 위해 학습 문서에
 > - git commit history : 06-01 ~ 06-02
 >### 사전 준비 작업 없음
 <br/>
+
+## Chapter 07 : S3 Storage 를 Loki Log 저장소로 사용 하기
+> - 학습 문서 : [./doc/chapter07.md](./doc/chapter07.md)
+> - git history : 07-01
+>### 사전 준비 작업 없음
