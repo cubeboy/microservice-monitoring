@@ -68,9 +68,9 @@ Contact point type를 선택하면, 그에 따른 설정 값들이 아래에 보
   label Matcher의 경우 label, value, operator의 3가지 부분으로 나뉘어 있다. label은 일치시킬 라벨 이름이며, 정확히 일치해야 한다. value 필드는 label에 해당하는 값이며, operator에 따라 달라진다.  연산자는 label 값에 대해 일치시킬 연산자이며, 사용 가능한 연산자는 다음과 같다.
 
   * = value와 정확히 동일한 label
-  * != value와 일치하지 않는 label    
-  * =~ value 값과 일치하는 label (해당 value을 포함하는 label)
-  * !~ value와 일치하지 않는 label (해당 value를 포함하지 않는 label)
+  * != value와 정확히 일치하지 않는 label    
+  * =~ value 값과 일치하는 label (해당 value을 포함하는 label) LIKE 조건이라고 보면 됨. 
+  * !~ value와 일치하지 않는 label (해당 value를 포함하지 않는 label) NOT LIKE 조건이라고 보면 된다.
 
 
 1. __Silence__
@@ -80,16 +80,21 @@ Contact point type를 선택하면, 그에 따른 설정 값들이 아래에 보
  *  알람 그룹은 alert Admin Instance의 그룹화된 경보를 표시한다. 기본적으로 알림은 통지 정책에서 루트 정책의 label key별로 그룹화된다. 공통 경고를 단일 alert group으로 그룹화하면 중복 경고가 발생하는 것을 방지할 수 있다.
 
 ### 실제로 알람 규칙을 만들고 알람 정책에 연결해보자. ###
+   이 예제에서는 CloudWatch
 
-  
-
-  >![creatge-alertrule1](./img/create-alertrule1.png)
-  위의 variable에서 단계에서 확인해봤던 EC2 CPU 사용량 최대값 Metric 정보를 가지고 알림 규칙을 만들어보자.
-    >![creatge-alertrule2](./img/create-alertrule2.png)
-    A에서 설정한 Metric 정보 중에서 가장 최신 CPU 사용량 최대값이 12를 넘을 경우를  B에서 임계치로 설정하고, 3번에서 이 B의 상태를 1m동안 확인하는데 5분동안 해당 상태가 유지될 경우에 Alert을 보내도록 한다.
-    >![creatge-alertrule3](./img/create-alertrule3.png)
-    privew Alert으로 알림 상태를 확인할 수 있고, Label 입력 시 이를 'DevOps = IOT'로 그룹화하여 관리할 수 있다.
-
-    * 위에서 만든 Alert Rule을 Contact Point에 연결해보자.
-  >![contact_policy](./img/contact-policy.png)
+   > Grafana에서 우측의 종모양 버튼을 클릭하고 Contact Point를 클릭한다.
+   ![contact-point-endpoint](.img/../img/contact-point-endpoint.png)
+   > Contact Point 화면에서 add new Contact Point 버튼을 눌러 새 Contact Point를 생성하는 화면으로 전환한다. 간단하게 Teams로 Alert을 보내주는 Contact Point를 만들어보겠다.
+   ![contact-point-setting](./img/contact-point-setting.png)
+   위와 같이 contact point type과 URL을 입력하여 contact point를 생성해준다. 그리고 다시 화면 우측의 메뉴에서 +버튼을 누르고 Alert rules를 클릭한다.
+   ![alert-rule-endpoint](./img/alert-rule-endpoint.png)
+    Rule 다음과 같이 선택하면 EC2 CPU 사용량 중 특정 instance id의 최대값 Metric 정보를 가지고 알림 규칙을 만들 수 있다. 
+   ![creatge-alertrule1](./img/create-alertrule1.png)
+    A에서 설정한 Metric 정보 중에서 가장 최신 CPU 사용량 최대값이 12를 넘을 경우를  B에서 임계치로 설정한다. 그리고 이 B의 상태를 1분동안 체크해 Pending 상태를 5분동안 유지될 경우에 Alert 생성해  보내도록 한다. 
+  >![creatge-alertrule2](./img/create-alertrule2.png)
+    Label을 입력해 'DevOps = IOT'로 그룹화하여 관리할 수 있도록 하자. 값들을 입력하고 save 버튼을 눌러 Alert rule을 저장한다.
+  >![creatge-alertrule3](./img/create-alertrule3.png)
+  > 이제 Alert Rule을 Contact Point에 연결해보자. 우선 우측의 메뉴에서 종모양 버튼을 클릭하고 Notification Policies를 클릭한다.
+  >![notification-policy-endpoint](./img/notification-policy-endpoint.png)
   >이런식으로 설정을 하면 label이 DevOps = IOT인 항목들이 Alert Rule에 적합할 경우 Telegram으로 Alert을 보내주게 된다.
+    >![contact_policy](./img/contact-policy.png)
