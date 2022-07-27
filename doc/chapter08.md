@@ -73,14 +73,14 @@ Contact point type를 선택하면, 그에 따른 설정 값들이 아래에 보
   * !~ value와 일치하지 않는 label (해당 value를 포함하지 않는 label) NOT LIKE 조건이라고 보면 된다.
 
 
-1. __Silence__
+4. __Silence__
 * 설정한 기간 별로 알림 규칙을 무시하는 규칙. 정한 Period 내에서 설정한 label Matcher 조건에 적합한 알림 규칙에 적합해도 알림을 생성하지 않는다. 설정한 Period가 지나면 다시 알림이 시작된다. Silence는 사용자 인터페이스에 알림이 표시되는 것이나, 알림 규칙을 평가하는 것을 막지 않고 단지 알람이 생성되어 Contact Point로 보내는 것만을 중단시킨다.
 
 5. __알람 그룹__
  *  알람 그룹은 alert Admin Instance의 그룹화된 경보를 표시한다. 기본적으로 알림은 통지 정책에서 루트 정책의 label key별로 그룹화된다. 공통 경고를 단일 alert group으로 그룹화하면 중복 경고가 발생하는 것을 방지할 수 있다.
 
 ### 실제로 알람 규칙을 만들고 알람 정책에 연결해보자. ###
-   이 예제에서는 CloudWatch
+   이 예제에서는 CloudWatch DataSource를 사용해 Alert을 만드는 방법을 설명한다.
 
    > Grafana에서 우측의 종모양 버튼을 클릭하고 Contact Point를 클릭한다.
    ![contact-point-endpoint](.img/../img/contact-point-endpoint.png)
